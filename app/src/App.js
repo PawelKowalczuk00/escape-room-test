@@ -1,26 +1,47 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import '../node_modules/bootstrap/dist/css/bootstrap.css';
+import './css/App.css';
+import '../node_modules/bootstrap/dist/js/bootstrap.js';
+import logo from './img/logo.png';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <div className="App ">
+        <section>
+          <nav className="navbar navbar-dark bg-primary navbar-expand-md">
+            <a className="navbar-brand" href="#top">
+              <img src={logo} className="d-inline-block mr-1 align-bottom" alt="logo" />
+              Escape Rooom
+              </a>
+            <div className="collapse navbar-collapse" id="menu">
+              <ul className="navbar-nav mr-auto">
+                <li className="nav-item">
+                  <a className="nav-link" href="#about"> About</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#rooms"> Our rooms </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#calendar"> Calendar </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#register"> Register </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#login"> Login </a>
+                </li>
+              </ul>
+            </div>
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+          </nav>
+        </section>
+      </div>
+    );
+  }
 }
+
 
 export default App;
