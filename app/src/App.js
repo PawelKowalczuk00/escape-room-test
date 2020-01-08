@@ -1,47 +1,32 @@
 import React from 'react';
-import '../node_modules/bootstrap/dist/css/bootstrap.css';
-import './css/App.css';
-import '../node_modules/bootstrap/dist/js/bootstrap.js';
-import logo from './img/logo.png';
+//BrowserRouter / HashRouter / MemoryRouter
+import { MemoryRouter, Route } from 'react-router-dom';
+
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.js';
+
+import Navbar from './Components/Navbar';
+import HomeComponent from './Components/Routes/HomeComponent';
+import RoomsComponent from './Components/Routes/RoomsComponent';
+import CalendarComponent from './Components/Routes/CalendarComponent';
+import AccountComponent from './Components/Routes/AccountComponent';
 
 class App extends React.Component {
   render() {
     return (
-      <div className="App ">
-        <section>
-          <nav className="navbar navbar-dark bg-primary navbar-expand-md">
-            <a className="navbar-brand" href="#top">
-              <img src={logo} className="d-inline-block mr-1 align-bottom" alt="logo" />
-              Escape Rooom
-              </a>
-            <div className="collapse navbar-collapse" id="menu">
-              <ul className="navbar-nav mr-auto">
-                <li className="nav-item">
-                  <a className="nav-link" href="#about"> About</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#rooms"> Our rooms </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#calendar"> Calendar </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#register"> Register </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#login"> Login </a>
-                </li>
-              </ul>
-            </div>
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu">
-              <span className="navbar-toggler-icon"></span>
-            </button>
-          </nav>
-        </section>
+      <div>
+        <MemoryRouter>
+          <Navbar />
+          <section>
+            <Route path="/" exact component={HomeComponent} />
+            <Route path="/rooms" exact component={RoomsComponent} />
+            <Route path="/calendar" exact component={CalendarComponent} />
+            <Route path="/account" exact component={AccountComponent} />
+          </section>
+        </MemoryRouter>
       </div>
     );
   }
 }
-
 
 export default App;
