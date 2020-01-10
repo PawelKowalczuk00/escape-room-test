@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from '../../functions/axiosSetup';
+import { login, register, account } from '../../functions/axiosSetup';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
@@ -7,34 +7,42 @@ import 'bootstrap/dist/js/bootstrap.js';
 class HomeComponent extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { username: "", email: "", password: "", info: "", error: "" };
+        this.state = { username: "", email: "", password: "", info: null, error: "" };
     }
 
     onRegisterSubmit = async (e) => {
-        this.setState({ info: "", error: "" });
+        this.setState({ info: null, error: "" });
+        localStorage.clear();
         e.preventDefault();
-        axios.post('/register', JSON.stringify({
+        register({
             username: this.state.username,
             email: this.state.email,
             password: this.state.password
-        }))
+        })
             .then(res => {
                 this.setState({ info: res.data });
             })
             .catch(er => {
-                this.setState({ error: er.response.data });
+                console.log(er);
+                if (er.response) {
+                    this.setState({ info: er.response.data });
+                }
+                else {
+                    this.setState({ info: er.message});
+                }
             });
     }
 
     onLoginSubmit = (e) => {
-        this.setState({ info: "", error: "" });
+        this.setState({ info: null, error: "" });
         e.preventDefault();
-        axios.post('/login', JSON.stringify({
+        login({
             username: this.state.username,
             password: this.state.password
-        }))
+        })
             .then(res => {
                 localStorage.setItem('x-auth-token', res.headers['x-auth-token']);
+                this.token = res.headers['x-auth-token'];
                 localStorage.setItem('username', this.state.username);
                 this.setState({ info: res.data });
             })
@@ -44,18 +52,20 @@ class HomeComponent extends React.Component {
     }
 
     onInfoSubmit = (e) => {
-        this.setState({ info: "", error: "" });
+        this.setState({ info: null, error: "" });
         e.preventDefault();
-        axios.get(`/account/${localStorage.getItem('username')}`, {
-            headers: {
-                "x-auth-token": localStorage.getItem('x-auth-token')
-            }
-        })
+        account()
             .then(res => {
                 this.setState({ info: JSON.stringify(res.data) });
             })
             .catch(er => {
-                this.setState({ info: er.response.data });
+                console.log(er);
+                if (er.response) {
+                    this.setState({ info: er.response.data });
+                }
+                else {
+                    this.setState({ info: er.message});
+                }
             });
     }
 
@@ -124,7 +134,7 @@ class HomeComponent extends React.Component {
                     <form onSubmit={this.onInfoSubmit}>
                         <button type="submit" className="btn btn-primary">See daetails</button>
                     </form>
-                    <div>{this.state.info}</div><br />
+                    <div className="alert alert-primary" role="alert">{this.state.info}</div><br />
                     <button type="button" className="btn btn-danger" onClick={this.onLoggOutClick}>Log out</button>
                 </div>
             </div>

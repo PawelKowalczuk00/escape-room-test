@@ -1,28 +1,99 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { roomsdates } from '../../functions/axiosSetup';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import '../../css/style.css';
 
-const HomeComponent = () => {
-    return (
-        <div>
-            <Link to="/calendar">
-                <div className="btn btn-light">Reserve a room now!</div>
-            </Link>
+import TableComponent from './TableComponent.js';
+
+class CalendarComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { terms: null, info: null };
+    }
+    week = 0;
+    componentDidMount() {
+        this.updateCalendar();
+    }
+
+    updateCalendar = () => {
+        roomsdates(this.week)
+            .then(res => {
+                this.setState({ terms: res.data, info: null });
+            })
+            .catch(er => {
+                console.log(er);
+                if (er.response) {
+                    this.setState({ terms: null, info: er.response.status + " " + er.response.statusText });
+                }
+                else {
+                    this.setState({ terms: null, info: er.message });
+                }
+            })
+    }
+
+    incrementWeek = () => {
+        this.week++;
+        this.updateCalendar();
+    }
+
+    decrementWeek = () => {
+        if (this.week > 0) {
+            this.week--;
+            this.updateCalendar();
+        }
+    }
+
+    renderTable = (start, end) => {
+        if (this.state.terms === null) {
+            return (
+                <div className="d-flex justify-content-center align-items-center">
+                    <div className="spinner-border" role="status">
+                        <span className="sr-only">Loading...</span>
+                    </div>
+                </div>
+            );
+        }
+        else
+            return <TableComponent start={start} updateCalendar={this.updateCalendar} info={this.info} terms={this.state.terms} />
+    }
+
+    renderInfo = () => {
+        if (this.state.info !== null) {
+            return (
+                <div className="alert alert-info" role="alert">
+                    {this.state.info}
+                </div>
+            );
+        }
+    }
+
+    info = (message) => {
+        this.setState({ info: message });
+    }
+
+    render() {
+        const start = new Date(Date.now() + this.week * 604800000);
+        const end = new Date(Date.now() + 604800000 * (this.week + 1));
+        return (
             <div>
-            <p className="lead">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                 Suspendisse tempor sapien quis risus gravida, sed malesuada sapien semper.
-                 Praesent blandit sem dolor, sit amet finibus orci scelerisque ut.
-                 Pellentesque tincidunt laoreet lorem eget congue.
-                 Nullam pulvinar ut magna ut consectetur.
-                 Donec sollicitudin ligula vitae ipsum tempor sollicitudin.
-                 Nam ut tempus magna.
-            </p>
+                <div className="row">
+                    <div className="container-fluid border-bottom d-flex align-items-start mb-3">
+                        <h3 className="title">Make a reservation by clicking the free termin</h3>
+                        <button className="btn btn-success refresh" onClick={this.updateCalendar}>Refresh</button>
+                    </div>
+                </div>
+                <div className="d-flex justify-content-center align-items-center">
+                    <h4>Week: {start.toLocaleDateString()} - {end.toLocaleDateString()}</h4>
+                    <button className="btn btn-success refresh" onClick={this.incrementWeek}><b>+</b></button>
+                    <button className="btn btn-danger refresh" onClick={this.decrementWeek}><b>-</b></button>
+                </div>
+                {this.renderInfo()}
+                {this.renderTable(start)}
             </div>
-        </div>
-    );
+        );
+    }
 }
 
-export default HomeComponent;
+export default CalendarComponent;

@@ -17,7 +17,7 @@ class App extends React.Component {
       <div>
         <MemoryRouter>
           <Navbar />
-          <section>
+          <section className="col-12 col-lg-10 offset-lg-1">
             <Route path="/" exact component={HomeComponent} />
             <Route path="/rooms" exact component={RoomsComponent} />
             <Route path="/calendar" exact component={CalendarComponent} />

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 
-const HomeComponent = () => {
+const RoomsComponent = () => {
     return (
         <div>
             <Link to="/calendar">
@@ -25,4 +25,4 @@ const HomeComponent = () => {
     );
 }
 
-export default HomeComponent;
+export default RoomsComponent;
