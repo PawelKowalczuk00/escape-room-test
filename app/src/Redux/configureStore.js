@@ -10,3 +10,5 @@ const configureStore = (initialState = {}) => {
     termReducer: termReducer
     }));
 }
+
+export default configureStore;
