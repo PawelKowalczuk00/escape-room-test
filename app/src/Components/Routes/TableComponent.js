@@ -37,15 +37,15 @@ class TableComponent extends React.Component {
     onTermClick = (e) => {
         const UTCShifted = new Date(e.target.dataset.term);
         UTCShifted.setUTCHours(UTCShifted.getUTCHours());
-        console.log('UTCShifted :', UTCShifted);
-        console.log('e.target.dataset.term :', e.target.dataset.term);
         reserve({
             room: e.target.dataset.room,
             term: e.target.dataset.term
         })
             .then(res => {
-                //this.props.updateCalendar();
                 this.props.info(res.data);
+                setTimeout(() => {
+                    this.props.updateCalendar();
+                }, 2000);
             })
             .catch(er => {
                 console.log(er);
@@ -111,7 +111,5 @@ class TableComponent extends React.Component {
         );
     }
 }
-const x = new Date();
-x.setUTCHours()
 
 export default TableComponent;

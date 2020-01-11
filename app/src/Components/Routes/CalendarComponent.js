@@ -20,6 +20,7 @@ class CalendarComponent extends React.Component {
     updateCalendar = () => {
         roomsdates(this.week)
             .then(res => {
+                console.log('terms :', res.data);
                 this.setState({ terms: res.data, info: null });
             })
             .catch(er => {

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
+import '../../css/form.css';
 
 class RegisterComponent extends React.Component {
     constructor(props) {
@@ -26,6 +27,8 @@ class RegisterComponent extends React.Component {
             password: this.state.password
         })
             .then(res => {
+                localStorage.setItem('x-auth-token', res.headers['x-auth-token']);
+                localStorage.setItem('username', this.state.username);
                 this.setState({ redirect: true });
             })
             .catch(er => {
