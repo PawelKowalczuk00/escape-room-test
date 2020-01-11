@@ -1,5 +1,7 @@
 # EscapeRoomFrontend
 
+Link to github pages: https://cc-team-alfa.github.io/EscapeRoomFrontend/
+
 Inside that directory, you can run several commands:
 
   npm start

@@ -17,6 +17,10 @@ class AccountComponent extends React.Component {
         account()
             .then(res => {
                 this.setState({ info: JSON.stringify(res.data) });
+                let bookings = res.data.bookings.map(term => {
+                    return (new Date(term.term)).valueOf() + "@" + term.room;
+                })
+                sessionStorage.setItem('bookings', bookings);
             })
             .catch(er => {
                 if (er.response) {
@@ -26,7 +30,7 @@ class AccountComponent extends React.Component {
                     this.setState({ info: er.message });
                 }
                 setTimeout(() => {
-                    this.setState({ redirect: true })
+                    this.setState({ redirect: true });
                 }, 2000)
             });
     }

@@ -21,14 +21,30 @@ img[alt="logo"] {
 }
 
 .hour {
-    background-color: #90ee90;
-    border: 1px solid lightskyblue;
     font-weight: 600;
     margin-right: 2px;
     text-align: center;
     height: 3rem;
     width: 3rem;
+}
+
+.free {
+    background-color: #90ee90;
+    border: 1px solid lightskyblue;
     cursor: pointer;
+}
+
+.occupied {
+    color: white;
+    cursor: not-allowed;
+}
+
+.red {
+    background-color: darkred;
+}
+
+.blue {
+    background-color: blue;
 }
 
 .hoover {

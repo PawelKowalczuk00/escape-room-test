@@ -15,12 +15,15 @@ class TableComponent extends React.Component {
     }
 
     onTermEnter = (e) => {
-        e.target.style.border = "1px groove darkblue";
-        e.target.style.backgroundColor = "darkgreen";
-        e.target.style.fontWeight = "800";
+        let info = e.target.classList[1];
+        if (info === "free") {
+            e.target.style.border = "1px groove darkblue";
+            e.target.style.backgroundColor = "darkgreen";
+            e.target.style.fontWeight = "800";
+        }
         this.hoover.current.style.display = "block";
         const date = new Date(e.target.dataset.term);
-        this.hoover.current.innerHTML = `<b>Free</b><br/>
+        this.hoover.current.innerHTML = `<b>${info.toUpperCase()}</b><br/>
                                         Day: ${date.toLocaleDateString()}<br/>
                                         At: ${date.toLocaleTimeString().substr(0, 5)}`;
     }
@@ -29,12 +32,20 @@ class TableComponent extends React.Component {
         this.hoover.current.style.left = e.pageX + 5 + "px";
     }
     onTermLeave = (e) => {
-        e.target.style.border = "1px solid lightskyblue";
-        e.target.style.backgroundColor = "#90ee90";
-        e.target.style.fontWeight = "600";
+        let info = e.target.classList[1];
+        if (info === "free") {
+            e.target.style.border = "1px solid lightskyblue";
+            e.target.style.backgroundColor = "#90ee90";
+            e.target.style.fontWeight = "600";
+        }
         this.hoover.current.style.display = "none";
     }
     onTermClick = (e) => {
+        let target = e.target;
+        let info = e.target.classList[1];
+        if (info === "occupied") {
+            return this.props.info("This termin is occupied");
+        }
         const UTCShifted = new Date(e.target.dataset.term);
         UTCShifted.setUTCHours(UTCShifted.getUTCHours());
         reserve({
@@ -43,9 +54,11 @@ class TableComponent extends React.Component {
         })
             .then(res => {
                 this.props.info(res.data);
-                setTimeout(() => {
-                    this.props.updateCalendar();
-                }, 2000);
+                target.style.backgroundColor = "blue";
+                target.style.color = "white";
+                target.style.cursor = "not-allowed";
+                target.classList.add("occupied", "red");
+                target.classList.remove("free");
             })
             .catch(er => {
                 console.log(er);
@@ -55,7 +68,10 @@ class TableComponent extends React.Component {
                 else {
                     this.props.info(er.message);
                 }
-            })
+            });
+        target.style.backgroundColor = "yellow";
+        target.style.color = "black";
+        target.style.cursor = "not-allowed";
     }
 
     render() {
@@ -64,6 +80,7 @@ class TableComponent extends React.Component {
             days.push(days[i - 1] + 86400000);
         }
         days = days.map(day => day = (new Date(day)));
+        let occupiedTerms = this.props.terms.map(term => (new Date(term.term)).valueOf() + "@" + term.room);
         return (
             <div>
                 <table className="table table-striped table-bordered table-responsive-md">
@@ -85,16 +102,22 @@ class TableComponent extends React.Component {
                                             <td>
                                                 <div className="custom-flex">
                                                     {[6, 10, 14, 18, 22].map(hour => {
+                                                        let isSunday = day.getDay() === 0;
+                                                        let currentDate = new Date(day.getFullYear(), day.getMonth(), day.getDate(), hour);
+                                                        let currentTerm = currentDate.valueOf() + "@" + room;
+                                                        let isOccupied = occupiedTerms.includes(currentTerm) ? true : false;
+                                                        let isSelf = sessionStorage.getItem('bookings').includes(currentTerm) ? "blue" : "red";
+                                                        let additionalClass = (isSunday || isOccupied) ? "occupied " + isSelf : "free";
                                                         return (
-                                                            <div className="hour"
-                                                                data-term={new Date(day.getFullYear(), day.getMonth(), day.getDate(), hour)}
+                                                            <div className={"hour " + additionalClass}
+                                                                data-term={currentDate}
                                                                 data-room={room}
                                                                 onMouseEnter={this.onTermEnter}
                                                                 onMouseLeave={this.onTermLeave}
                                                                 onMouseMove={this.onTermMove}
                                                                 onClick={this.onTermClick}>
                                                                 {hour}:00
-                                                </div>
+                                                            </div>
                                                         );
                                                     })}
                                                 </div>
