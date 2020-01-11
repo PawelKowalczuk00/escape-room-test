@@ -16,11 +16,6 @@ class TableComponent extends React.Component {
 
     onTermEnter = (e) => {
         let info = e.target.classList[1];
-        if (info === "free") {
-            e.target.style.border = "1px groove darkblue";
-            e.target.style.backgroundColor = "darkgreen";
-            e.target.style.fontWeight = "800";
-        }
         this.hoover.current.style.display = "block";
         const date = new Date(e.target.dataset.term);
         this.hoover.current.innerHTML = `<b>${info.toUpperCase()}</b><br/>
@@ -29,15 +24,9 @@ class TableComponent extends React.Component {
     }
     onTermMove = (e) => {
         this.hoover.current.style.top = e.pageY - 60 + "px";
-        this.hoover.current.style.left = e.pageX + 5 + "px";
+        this.hoover.current.style.left = e.pageX + 25 + "px";
     }
     onTermLeave = (e) => {
-        let info = e.target.classList[1];
-        if (info === "free") {
-            e.target.style.border = "1px solid lightskyblue";
-            e.target.style.backgroundColor = "#90ee90";
-            e.target.style.fontWeight = "600";
-        }
         this.hoover.current.style.display = "none";
     }
     onTermClick = (e) => {
@@ -54,10 +43,7 @@ class TableComponent extends React.Component {
         })
             .then(res => {
                 this.props.info(res.data);
-                target.style.backgroundColor = "blue";
-                target.style.color = "white";
-                target.style.cursor = "not-allowed";
-                target.classList.add("occupied", "red");
+                target.classList.add("occupied", "blue");
                 target.classList.remove("free");
             })
             .catch(er => {
@@ -69,9 +55,6 @@ class TableComponent extends React.Component {
                     this.props.info(er.message);
                 }
             });
-        target.style.backgroundColor = "yellow";
-        target.style.color = "black";
-        target.style.cursor = "not-allowed";
     }
 
     render() {
