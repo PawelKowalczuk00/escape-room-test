@@ -81,6 +81,7 @@ class TableComponent extends React.Component {
         }
         days = days.map(day => day = (new Date(day)));
         let occupiedTerms = this.props.terms.map(term => (new Date(term.term)).valueOf() + "@" + term.room);
+        let userTerms = sessionStorage.getItem('bookings') || [];
         return (
             <div>
                 <table className="table table-striped table-bordered table-responsive-md">
@@ -106,7 +107,7 @@ class TableComponent extends React.Component {
                                                         let currentDate = new Date(day.getFullYear(), day.getMonth(), day.getDate(), hour);
                                                         let currentTerm = currentDate.valueOf() + "@" + room;
                                                         let isOccupied = occupiedTerms.includes(currentTerm) ? true : false;
-                                                        let isSelf = sessionStorage.getItem('bookings').includes(currentTerm) ? "blue" : "red";
+                                                        let isSelf = userTerms.includes(currentTerm) ? "blue" : "red";
                                                         let additionalClass = (isSunday || isOccupied) ? "occupied " + isSelf : "free";
                                                         return (
                                                             <div className={"hour " + additionalClass}
