@@ -1,4 +1,5 @@
 import React from 'react';
+import {isMobile} from 'react-device-detect';
 
 import { reserve } from '../../functions/axiosSetup'
 
@@ -23,8 +24,9 @@ class TableComponent extends React.Component {
                                         At: ${date.toLocaleTimeString().substr(0, 5)}`;
     }
     onTermMove = (e) => {
-        this.hoover.current.style.top = e.pageY - 60 + "px";
-        this.hoover.current.style.left = e.pageX + 25 + "px";
+        let pos = e.target.getBoundingClientRect();
+        this.hoover.current.style.top = (pos.y - 60) + "px";
+        this.hoover.current.style.left = (pos.x + e.target.clientWidth) + "px";
     }
     onTermLeave = (e) => {
         this.hoover.current.style.display = "none";
@@ -91,7 +93,8 @@ class TableComponent extends React.Component {
                                                         let currentTerm = currentDate.valueOf() + "@" + room;
                                                         let isOccupied = occupiedTerms.includes(currentTerm) ? true : false;
                                                         let isSelf = userTerms.includes(currentTerm) ? "blue" : "red";
-                                                        let additionalClass = (isSunday || isOccupied) ? "occupied " + isSelf : "free";
+                                                        let isPast = currentDate <= Date.now();
+                                                        let additionalClass = ((isSunday || isOccupied || isPast) ? "occupied " + isSelf : "free" + (isMobile ? "" : " hooverable"));
                                                         return (
                                                             <div className={"hour " + additionalClass}
                                                                 data-term={currentDate}

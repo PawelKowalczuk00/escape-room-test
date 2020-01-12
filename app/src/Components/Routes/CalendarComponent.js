@@ -1,5 +1,6 @@
 import React from 'react';
 import { roomsdates } from '../../functions/axiosSetup';
+import Loader from '../LoaderComponent';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -34,8 +35,12 @@ class CalendarComponent extends React.Component {
     }
 
     incrementWeek = () => {
-        this.week++;
-        this.updateCalendar();
+        if (this.week < 10) {
+            this.week++;
+            this.updateCalendar();
+        }
+        else
+            this.setState({ info: "Can't reserve further" });
     }
 
     decrementWeek = () => {
@@ -43,17 +48,13 @@ class CalendarComponent extends React.Component {
             this.week--;
             this.updateCalendar();
         }
+        else
+            this.setState({ info: "Can't go into past..." });
     }
 
     renderTable = (start, end) => {
         if (this.state.terms === null) {
-            return (
-                <div className="d-flex justify-content-center align-items-center">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
-            );
+            return <Loader />
         }
         else
             return <TableComponent start={start} updateCalendar={this.updateCalendar} info={this.info} terms={this.state.terms} />

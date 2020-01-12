@@ -34,7 +34,7 @@ img[alt="logo"] {
     cursor: pointer;
 }
 
-.free:hover {
+.hooverable:hover {
     background-color: #3ad33a;
     border: 1px solid #ffffff;
 }

@@ -1,0 +1,11 @@
+.margined {
+    margin: 5px;
+}
+
+.custom-header {
+    display: inline;
+}
+.custom-paragraph {
+    font-weight: bolder;
+    font-size: 20px;
+}

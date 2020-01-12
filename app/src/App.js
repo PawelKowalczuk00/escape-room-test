@@ -4,6 +4,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
+import './css/index.css';
 
 import Navbar from './Components/Navbar';
 import HomeComponent from './Components/Routes/HomeComponent';
@@ -28,6 +29,9 @@ class App extends React.Component {
             <Route path="/login" exact component={LoginComponent} />
           </section>
         </MemoryRouter>
+        <footer>
+          CodersCamp 2019/2020
+        </footer>
       </div>
     );
   }

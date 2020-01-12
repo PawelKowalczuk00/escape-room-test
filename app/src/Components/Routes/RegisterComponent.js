@@ -2,6 +2,7 @@ import React from 'react';
 import { register } from '../../functions/axiosSetup';
 import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom';
+import Loader from '../LoaderComponent';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
@@ -18,7 +19,7 @@ class RegisterComponent extends React.Component {
     }
 
     onRegisterSubmit = async (e) => {
-        this.setState({ error: "" });
+        this.setState({ error: null });
         localStorage.clear();
         e.preventDefault();
         register({
@@ -27,7 +28,6 @@ class RegisterComponent extends React.Component {
             password: this.state.password
         })
             .then(res => {
-                localStorage.setItem('x-auth-token', res.headers['x-auth-token']);
                 localStorage.setItem('username', this.state.username);
                 this.setState({ redirect: true });
             })
@@ -41,42 +41,56 @@ class RegisterComponent extends React.Component {
             });
     }
 
+    renderForm = () => {
+        return (
+            <span>
+                <form onSubmit={this.onRegisterSubmit}>
+                    <span className="text-danger">{this.state.error}</span>
+                    <div className="form-group">
+                        <label htmlFor="username">Username</label>
+                        <input type="text" className="form-control" id="username" placeholder="username" aria-describedby="emailHelp"
+                            value={this.state.username}
+                            onChange={(e) => this.setState({ username: e.target.value })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="email">Email address</label>
+                        <input type="email" className="form-control" id="email" placeholder="email@example.com" aria-describedby="emailHelp"
+                            value={this.state.email}
+                            onChange={(e) => this.setState({ email: e.target.value.toLowerCase() })}
+                        />
+                        <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="password">Password</label>
+                        <input type="password" className="form-control" id="password" placeholder="min 8 characters"
+                            value={this.state.password}
+                            onChange={(e) => this.setState({ password: e.target.value })}
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-primary">Sign up</button>
+                </form>
+                <Link to="/login">
+                    <span className="">Already have an account? Log in!</span>
+                </Link>
+            </span>
+        );
+    }
+
     render() {
         if (this.state.redirect)
-            return <Redirect to='/account' />;
+            return <Redirect to={{
+                pathname: "/login",
+                state: {
+                    username: this.state.username,
+                    password: this.state.password
+                }
+            }} />
         return (
             <div className="container">
                 <div className="flex-column align-items-center">
                     <h2>Register</h2>
-                    <form onSubmit={this.onRegisterSubmit}>
-                        <span className="text-danger">{this.state.error}</span>
-                        <div className="form-group">
-                            <label htmlFor="username">Username</label>
-                            <input type="text" className="form-control" id="username" placeholder="username" aria-describedby="emailHelp"
-                                value={this.state.username}
-                                onChange={(e) => this.setState({ username: e.target.value })}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="email">Email address</label>
-                            <input type="email" className="form-control" id="email" placeholder="email@example.com" aria-describedby="emailHelp"
-                                value={this.state.email}
-                                onChange={(e) => this.setState({ email: e.target.value.toLowerCase() })}
-                            />
-                            <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <input type="password" className="form-control" id="password" placeholder="min 8 characters"
-                                value={this.state.password}
-                                onChange={(e) => this.setState({ password: e.target.value })}
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-primary">Sign up</button>
-                    </form>
-                    <Link to="/login">
-                        <span className="">Already have an account? Log in!</span>
-                    </Link>
+                    {this.state.error === null ? <Loader /> : this.renderForm()}
                 </div>
             </div >
         );
