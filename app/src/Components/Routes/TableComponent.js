@@ -1,5 +1,5 @@
 import React from 'react';
-import {isMobile} from 'react-device-detect';
+import { isMobile } from 'react-device-detect';
 
 import { reserve } from '../../functions/axiosSetup'
 
@@ -16,10 +16,17 @@ class TableComponent extends React.Component {
     }
 
     onTermEnter = (e) => {
-        let info = e.target.classList[1];
+        let info;
+        let classList = [...(e.target.classList)]
+        if (classList.includes("blue"))
+            info = "Your reservation";
+        else if (classList.includes("red"))
+            info = "Not avaliable";
+        else
+            info = "Free";
         this.hoover.current.style.display = "block";
         const date = new Date(e.target.dataset.term);
-        this.hoover.current.innerHTML = `<b>${info.toUpperCase()}</b><br/>
+        this.hoover.current.innerHTML = `<b>${info}</b><br/>
                                         Day: ${date.toLocaleDateString()}<br/>
                                         At: ${date.toLocaleTimeString().substr(0, 5)}`;
     }
@@ -33,20 +40,19 @@ class TableComponent extends React.Component {
     }
     onTermClick = (e) => {
         let target = e.target;
-        let info = e.target.classList[1];
-        if (info === "occupied") {
+        if ([...(e.target.classList)].includes("occupied")) {
             return this.props.info("This termin is occupied");
         }
         const UTCShifted = new Date(e.target.dataset.term);
         UTCShifted.setUTCHours(UTCShifted.getUTCHours());
         reserve({
-            room: e.target.dataset.room,
-            term: e.target.dataset.term
+            room: target.dataset.room,
+            term: target.dataset.term
         })
             .then(res => {
                 this.props.info(res.data);
                 target.classList.add("occupied", "blue");
-                target.classList.remove("free");
+                target.classList.remove("free", "hooverable");
             })
             .catch(er => {
                 console.log(er);
@@ -94,6 +100,7 @@ class TableComponent extends React.Component {
                                                         let isOccupied = occupiedTerms.includes(currentTerm) ? true : false;
                                                         let isSelf = userTerms.includes(currentTerm) ? "blue" : "red";
                                                         let isPast = currentDate <= Date.now();
+                                                        console.log('isPast :', isPast, currentDate);
                                                         let additionalClass = ((isSunday || isOccupied || isPast) ? "occupied " + isSelf : "free" + (isMobile ? "" : " hooverable"));
                                                         return (
                                                             <div className={"hour " + additionalClass}

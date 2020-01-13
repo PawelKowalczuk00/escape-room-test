@@ -3,6 +3,8 @@ body {
 }
 
 footer {
+    position: sticky;
+    bottom: 2px;
     margin: 8px;
     opacity: 0.8;
     font-size: smaller;

@@ -31,7 +31,11 @@ class CalendarComponent extends React.Component {
                 else {
                     this.setState({ terms: null, info: er.message });
                 }
-            })
+            });
+    }
+
+    fetchRoomsdates = () => {
+        
     }
 
     incrementWeek = () => {
