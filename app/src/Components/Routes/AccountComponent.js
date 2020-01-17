@@ -63,7 +63,7 @@ class AccountComponent extends React.Component {
                     <span className="custom-paragraph badge badge-primary text-wrap">{this.state.user.email}</span>
                 </div>
                 <div className="margined">
-                    <table class="table table-sm table-hover">
+                    <table className="table table-sm table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>

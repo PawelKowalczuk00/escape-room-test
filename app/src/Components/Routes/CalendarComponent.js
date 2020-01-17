@@ -18,24 +18,18 @@ class CalendarComponent extends React.Component {
         this.updateCalendar();
     }
 
-    updateCalendar = () => {
+    updateCalendar = (tableInfo) => {
         roomsdates(this.week)
             .then(res => {
-                this.setState({ terms: res.data, info: null });
+                this.setState({ terms: res.data, info: tableInfo || null });
             })
             .catch(er => {
                 console.log(er);
-                if (er.response) {
+                if (er.response)
                     this.setState({ terms: null, info: er.response.status + " " + er.response.statusText });
-                }
-                else {
+                else
                     this.setState({ terms: null, info: er.message });
-                }
             });
-    }
-
-    fetchRoomsdates = () => {
-        
     }
 
     incrementWeek = () => {
@@ -86,13 +80,12 @@ class CalendarComponent extends React.Component {
                 <div className="row">
                     <div className="container-fluid border-bottom d-flex align-items-start mb-3">
                         <h3 className="title">Make a reservation by clicking the free termin</h3>
-                        <button className="btn btn-success refresh" onClick={this.updateCalendar}>Refresh</button>
                     </div>
                 </div>
                 <div className="d-flex justify-content-center align-items-center">
                     <h4>Week: {start.toLocaleDateString()} - {end.toLocaleDateString()}</h4>
-                    <button className="btn btn-success refresh" onClick={this.incrementWeek}><b>+</b></button>
                     <button className="btn btn-danger refresh" onClick={this.decrementWeek}><b>-</b></button>
+                    <button className="btn btn-success refresh" onClick={this.incrementWeek}><b>+</b></button>
                 </div>
                 {this.renderInfo()}
                 {this.renderTable(start)}

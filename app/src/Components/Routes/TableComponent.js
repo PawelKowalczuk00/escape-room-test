@@ -40,28 +40,29 @@ class TableComponent extends React.Component {
     }
     onTermClick = (e) => {
         let target = e.target;
-        if ([...(e.target.classList)].includes("occupied")) {
+        if ([...(target.classList)].includes("occupied")) {
             return this.props.info("This termin is occupied");
         }
-        const UTCShifted = new Date(e.target.dataset.term);
+        const {term} = target.dataset;
+        const {room} = target.dataset;
+        const UTCShifted = new Date(term);
         UTCShifted.setUTCHours(UTCShifted.getUTCHours());
         reserve({
-            room: target.dataset.room,
-            term: target.dataset.term
+            room: room,
+            term: term
         })
             .then(res => {
-                this.props.info(res.data);
-                target.classList.add("occupied", "blue");
-                target.classList.remove("free", "hooverable");
+                let bookings = sessionStorage.getItem('bookings') || "";
+                bookings += "," + (new Date(term)).valueOf() + "@" + target.dataset.room;
+                sessionStorage.setItem('bookings', bookings);
+                this.props.updateCalendar(res.data);
             })
             .catch(er => {
                 console.log(er);
-                if (er.response) {
+                if (er.response)
                     this.props.info(er.response.data);
-                }
-                else {
+                else
                     this.props.info(er.message);
-                }
             });
     }
 
@@ -100,7 +101,6 @@ class TableComponent extends React.Component {
                                                         let isOccupied = occupiedTerms.includes(currentTerm) ? true : false;
                                                         let isSelf = userTerms.includes(currentTerm) ? "blue" : "red";
                                                         let isPast = currentDate <= Date.now();
-                                                        console.log('isPast :', isPast, currentDate);
                                                         let additionalClass = ((isSunday || isOccupied || isPast) ? "occupied " + isSelf : "free" + (isMobile ? "" : " hooverable"));
                                                         return (
                                                             <div className={"hour " + additionalClass}
