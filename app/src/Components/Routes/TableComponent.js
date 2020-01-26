@@ -6,6 +6,7 @@ import { reserve } from '../../functions/axiosSetup'
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import '../../css/style.css';
+import Loader from '../LoaderComponent';
 
 const weekday = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -13,6 +14,7 @@ class TableComponent extends React.Component {
     constructor(props) {
         super(props);
         this.hoover = React.createRef();
+        this.state = { loading: "" };
     }
 
     onTermEnter = (e) => {
@@ -25,7 +27,7 @@ class TableComponent extends React.Component {
         else
             info = "Free";
         this.hoover.current.style.display = "block";
-        const date = new Date(e.target.dataset.term);
+        const date = new Date(e.target.dataset.date);
         this.hoover.current.innerHTML = `<b>${info}</b><br/>
                                         Day: ${date.toLocaleDateString()}<br/>
                                         At: ${date.toLocaleTimeString().substr(0, 5)}`;
@@ -43,26 +45,31 @@ class TableComponent extends React.Component {
         if ([...(target.classList)].includes("occupied")) {
             return this.props.info("This termin is occupied");
         }
-        const {term} = target.dataset;
+        const {date} = target.dataset;
         const {room} = target.dataset;
-        const UTCShifted = new Date(term);
+        const {term} = target.dataset;
+        const UTCShifted = new Date(date);
         UTCShifted.setUTCHours(UTCShifted.getUTCHours());
+        this.setState({loading: term});
         reserve({
-            room: room,
-            term: term
+            room,
+            term: date
         })
             .then(res => {
                 let bookings = sessionStorage.getItem('bookings') || "";
-                bookings += "," + (new Date(term)).valueOf() + "@" + target.dataset.room;
+                bookings += "," + term;
                 sessionStorage.setItem('bookings', bookings);
                 this.props.updateCalendar(res.data);
             })
             .catch(er => {
                 console.log(er);
                 if (er.response)
-                    this.props.info(er.response.data);
+                    this.props.info(er.response.data)
                 else
-                    this.props.info(er.message);
+                    this.props.info(er.message)
+            })
+            .finally(() => {
+                this.setState({loading: ""})
             });
     }
 
@@ -72,7 +79,7 @@ class TableComponent extends React.Component {
             days.push(days[i - 1] + 86400000);
         }
         days = days.map(day => day = (new Date(day)));
-        let occupiedTerms = this.props.terms.map(term => (new Date(term.term)).valueOf() + "@" + term.room);
+        let occupiedTerms = this.props.terms.map(date => (new Date(date.term)).valueOf() + "@" + date.room);
         let userTerms = sessionStorage.getItem('bookings') || [];
         return (
             <div>
@@ -102,10 +109,13 @@ class TableComponent extends React.Component {
                                                         let isSelf = userTerms.includes(currentTerm) ? "blue" : "red";
                                                         let isPast = currentDate <= Date.now();
                                                         let additionalClass = ((isSunday || isOccupied || isPast) ? "occupied " + isSelf : "free" + (isMobile ? "" : " hooverable"));
+                                                        if (this.state.loading === currentTerm)
+                                                            return <Loader/>
                                                         return (
                                                             <div className={"hour " + additionalClass}
-                                                                data-term={currentDate}
+                                                                data-date={currentDate}
                                                                 data-room={room}
+                                                                data-term={currentTerm}
                                                                 onMouseEnter={this.onTermEnter}
                                                                 onMouseLeave={this.onTermLeave}
                                                                 onMouseMove={this.onTermMove}
