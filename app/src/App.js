@@ -1,6 +1,6 @@
 import React from 'react';
 //BrowserRouter / HashRouter / MemoryRouter
-import { BrowserRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
@@ -18,7 +18,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <BrowserRouter>
+        <MemoryRouter>
           <Navbar />
           <section className="col-12 col-lg-10 offset-lg-1">
             <Route path="/" exact component={HomeComponent} />
@@ -28,7 +28,7 @@ class App extends React.Component {
             <Route path="/register" exact component={RegisterComponent} />
             <Route path="/login" exact component={LoginComponent} />
           </section>
-        </BrowserRouter>
+        </MemoryRouter>
         <footer>
           CodersCamp 2019/2020
         </footer>
