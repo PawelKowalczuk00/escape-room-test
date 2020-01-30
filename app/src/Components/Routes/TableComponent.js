@@ -41,6 +41,7 @@ class TableComponent extends React.Component {
         this.hoover.current.style.display = "none";
     }
     onTermClick = (e) => {
+        e.persist();
         let target = e.target;
         if ([...(target.classList)].includes("occupied")) {
             return this.props.info("This termin is occupied");
@@ -59,6 +60,7 @@ class TableComponent extends React.Component {
                 let bookings = sessionStorage.getItem('bookings') || "";
                 bookings += "," + term;
                 sessionStorage.setItem('bookings', bookings);
+                e.target.classList.add("blue");
                 this.props.updateCalendar(res.data);
             })
             .catch(er => {
