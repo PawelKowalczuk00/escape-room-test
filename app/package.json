@@ -2,6 +2,7 @@
   "name": "app",
   "version": "0.2.0",
   "private": true,
+  "homepage": "https://escape-room-front.onrender.com/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
