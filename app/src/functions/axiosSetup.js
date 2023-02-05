@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const base = axios.create({
-    baseURL: "https://coders-camp-2019-team-alpha.herokuapp.com",
+    baseURL: "https://escape-room-hsao.onrender.com/",
     //baseURL: "http://localhost:3000",
     headers: {
         "Content-Type": 'application/json'

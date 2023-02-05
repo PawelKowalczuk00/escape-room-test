@@ -1,13 +1,12 @@
 {
   "name": "app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "homepage": "https://cc-team-alfa.github.io/EscapeRoomFrontend/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
-    "axios": "^0.19.1",
+    "axios": "^1.3.2",
     "bootstrap": "^4.4.1",
     "compression": "^1.7.4",
     "gh-pages": "^2.2.0",
@@ -17,7 +16,7 @@
     "react-device-detect": "^1.11.14",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
+    "react-scripts": "^5.0.1",
     "typescript": "^3.7.4"
   },
   "scripts": {
